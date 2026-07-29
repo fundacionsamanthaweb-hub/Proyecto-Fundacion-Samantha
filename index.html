@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fundación Samantha – Electrocardiogramas para todos</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- FontAwesome CDN Oficial para evitar errores de carga de iconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Google Fonts: Montserrat -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Three.js & OrbitControls for 3D BBVA Card -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Montserrat', 'sans-serif'],
+          },
+          colors: {
+            brandRed: {
+              50: '#fef2f2',
+              100: '#fee2e2',
+              500: '#e03a3c', /* Rojo Corporativo Samantha */
+              600: '#c0282a',
+              700: '#991b1d',
+            },
+            brandBlue: {
+              50: '#f0f4f9',
+              500: '#3b71ca', /* Azul Corporativo Samantha */
+              600: '#28509e',
+              700: '#1c3d75',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased">
+
+  <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-md transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        
+        <!-- Logo / Identidad -->
+        <a href="#inicio" class="flex items-center space-x-3 group">
+          <div class="relative w-14 h-14 overflow-hidden rounded-full border-2 border-brandRed-500 bg-white flex items-center justify-center shadow-md transition-transform duration-300 group-hover:scale-105">
+            <img 
+              src="img/logos/logoprincipal.png" 
+              alt="Logo Fundación Samantha" 
+              class="w-full h-full object-cover"
+              onerror="this.src='https://placehold.co/150x150/e03a3c/ffffff?text=F+S'"
+            />
+          </div>
+          <div class="flex flex-col">
+            <span class="font-extrabold text-lg sm:text-xl text-brandRed-500 tracking-tight leading-none group-hover:text-brandBlue-500 transition-colors duration-300">
+              Fundación
+            </span>
+            <span class="font-bold text-xs text-brandBlue-500 uppercase tracking-widest leading-none mt-1">
+              Samantha Carolina Quintero Armenta I.A.P.
+            </span>
+          </div>
+        </a>
+
+        <!-- Enlaces para Escritorio -->
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="#inicio" class="nav-link font-semibold text-gray-600 hover:text-brandRed-500 transition-colors">Inicio</a>
+          <a href="#nosotros" class="nav-link font-semibold text-gray-600 hover:text-brandRed-500 transition-colors">Nosotros</a>
+          <a href="#servicios" class="nav-link font-semibold text-gray-600 hover:text-brandRed-500 transition-colors">Servicios</a>
+          <a href="#contacto" class="nav-link font-semibold text-gray-600 hover:text-brandRed-500 transition-colors">Contacto</a>
+          <a href="#donar" class="bg-brandRed-500 text-white font-bold px-6 py-2.5 rounded-full hover:bg-brandBlue-500 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5">
+            <i class="fas fa-heart mr-2"></i>Donar
+          </a>
+        </div>
+
+        <!-- Botón de Menú Móvil -->
+        <div class="md:hidden flex items-center">
+          <button id="menuToggle" class="text-gray-600 hover:text-brandRed-500 focus:outline-none focus:ring-2 focus:ring-brandRed-500 p-2 rounded-lg" aria-label="Abrir menú">
+            <i class="fas fa-bars text-2xl"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menú desplegable móvil -->
+    <div id="navLinks" class="hidden md:hidden bg-white border-t border-gray-100 shadow-inner px-4 py-4 space-y-3 transition-all duration-300">
+      <a href="#inicio" class="block font-semibold text-gray-700 hover:text-brandRed-500 py-2 border-b border-gray-50">Inicio</a>
+      <a href="#nosotros" class="block font-semibold text-gray-700 hover:text-brandRed-500 py-2 border-b border-gray-50">Nosotros</a>
+      <a href="#servicios" class="block font-semibold text-gray-700 hover:text-brandRed-500 py-2 border-b border-gray-50">Servicios</a>
+      <a href="#contacto" class="block font-semibold text-gray-700 hover:text-brandRed-500 py-2 border-b border-gray-50">Contacto</a>
+      <a href="#donar" class="block text-center bg-brandRed-500 text-white font-bold py-3 rounded-xl shadow-md hover:bg-brandBlue-500 transition-colors">
+        <i class="fas fa-heart mr-2"></i>Haz tu Donación
+      </a>
+    </div>
+  </nav>
+
+  <header id="inicio" class="relative bg-gradient-to-br from-brandRed-50 via-white to-brandBlue-50 py-16 md:py-24 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <!-- Texto Principal e Introducción -->
+        <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+          <div class="inline-flex items-center space-x-2 bg-brandRed-100 text-brandRed-600 px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wider">
+            <i class="fas fa-heartbeat animate-pulse text-brandRed-500 mr-1"></i> Prevención Cardiovascular Comunitaria
+          </div>
+          <h1 class="text-4xl sm:text-5xl md:text-6xl font-black text-gray-900 leading-tight">
+            Tu corazón, <span class="text-brandRed-500">nuestra misión</span> de vida
+          </h1>
+          <p class="text-md sm:text-lg text-gray-600 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+            Apoyados por la <strong class="text-brandBlue-500 font-semibold">Fundación Samantha</strong>, brindamos electrocardiogramas gratuitos y educación de salud de alta calidad para comunidades vulnerables. Cuidamos cada latido.
+          </p>
+          <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
+            <a href="#servicios" class="bg-brandBlue-500 hover:bg-brandBlue-700 text-white font-bold text-center px-8 py-4 rounded-full shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+              <i class="fas fa-stethoscope mr-2"></i>Nuestros Servicios
+            </a>
+            <a href="#donar" class="bg-white hover:bg-gray-100 text-brandRed-500 border-2 border-brandRed-500 font-bold text-center px-8 py-4 rounded-full shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+              <i class="fas fa-hand-holding-heart mr-2"></i>Apoyar Causa
+            </a>
+          </div>
+        </div>
+
+        <!-- Contenedor del Carrusel de Imágenes de Internet (Unsplash) -->
+        <div class="lg:col-span-5 flex flex-col items-center justify-center relative">
+          <div class="relative w-72 h-72 sm:w-96 sm:h-96 rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-100 flex items-center justify-center transition-transform duration-500 hover:scale-105">
+            <!-- Imagen 1: Enfoque clínico y preventivo infantil -->
+            <img 
+              src="img/logos/icono.png" 
+              alt="Atención médica de calidad para niños" 
+              class="hero-slide absolute inset-0 w-full h-full object-cover scale-100 opacity-100"
+            />
+
+            <!-- Imagen 2: Electrocardiograma profesional clínico -->
+            <img 
+              src="img/galeria/imagen2.jpeg" 
+              alt="Electrocardiograma y monitoreo" 
+              class="hero-slide absolute inset-0 w-full h-full object-cover scale-95 opacity-0"
+            />
+
+            <!-- Imagen 3: Jornada de salud y prevención -->
+            <img 
+              src="img/galeria/imagen3.jpeg" 
+              alt="Prevención y salud familiar" 
+             class="hero-slide absolute inset-0 w-full h-full object-contain bg-white scale-95 opacity-0"
+            />
+
+            <!-- Imagen 4: Juventud y esperanza de bienestar -->
+            <img 
+              src="img/galeria/imagen4.jpeg" 
+              alt="Bienestar y esperanza de vida" 
+              class="hero-slide absolute inset-0 w-full h-full object-cover scale-95 opacity-0"
+            />
+
+            <!-- Indicadores de Puntos (Dots) del Carrusel interactivo -->
+            <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
+              <button onclick="goToSlide(0)" class="slide-dot w-3.5 h-3.5 rounded-full bg-brandRed-500 border border-white transition-all duration-300" aria-label="Imagen 1"></button>
+              <button onclick="goToSlide(1)" class="slide-dot w-3 h-3 rounded-full bg-white/60 hover:bg-white transition-all duration-300" aria-label="Imagen 2"></button>
+              <button onclick="goToSlide(2)" class="slide-dot w-3 h-3 rounded-full bg-white/60 hover:bg-white transition-all duration-300" aria-label="Imagen 3"></button>
+              <button onclick="goToSlide(3)" class="slide-dot w-3 h-3 rounded-full bg-white/60 hover:bg-white transition-all duration-300" aria-label="Imagen 4"></button>
+            </div>
+
+          </div>
+
+          <!-- Línea ECG Decorativa animada -->
+          <div class="w-full max-w-md mt-8">
+            <svg class="w-full h-24" viewBox="0 0 500 150" xmlns="http://www.w3.org/2000/svg">
+              <polyline fill="none" stroke="#e03a3c" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"
+                class="animate-ecg"
+                points="0,75 80,75 100,75 110,40 120,110 130,75 155,75 170,10 185,140 200,75 230,75 240,60 250,90 260,75 500,75" />
+            </svg>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <section id="nosotros" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h2 class="text-xs font-bold text-brandBlue-500 tracking-widest uppercase mb-2">¿Quiénes Somos?</h2>
+        <h3 class="text-3xl sm:text-4xl font-extrabold text-gray-900">
+          Uniendo voluntades para proteger tu ritmo cardíaco
+        </h3>
+        <p class="mt-4 text-md sm:text-lg text-gray-600 leading-relaxed">
+          Nuestra labor se enfoca en la identificación precoz de anomalías cardiológicas. Con la sinergia de voluntarios y patrocinadores, llevamos tecnología de punta a donde más se necesita.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Misión -->
+        <div class="group bg-gray-50 border border-gray-100 hover:border-brandRed-100 rounded-2xl p-8 hover:bg-white transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1">
+          <div class="w-14 h-14 bg-brandRed-50 text-brandRed-500 rounded-xl flex items-center justify-center mb-6 overflow-hidden transition-all duration-300 group-hover:bg-brandRed-500 group-hover:scale-105 p-2">
+            <img 
+              src="img/servicios/mision.png" 
+              alt="Icono Misión" 
+              class="w-full h-full object-contain filter group-hover:brightness-0 group-hover:invert transition-all duration-300"
+              onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fas fa-heartbeat text-2xl\'></i>';"
+            />
+          </div>
+          <h4 class="text-xl font-bold text-gray-900 mb-4">Misión</h4>
+          <p class="text-gray-600 leading-relaxed text-sm">
+            Brindar una atención de calidad y calidez humana a niños y jóvenes de escasos recursos con problemas cardiovasculares y poder ser para ellos una esperanza de vida. 
+          </p>
+        </div>
+
+        <!-- Visión -->
+        <div class="group bg-gray-50 border border-gray-100 hover:border-brandBlue-100 rounded-2xl p-8 hover:bg-white transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1">
+          <div class="w-14 h-14 bg-brandBlue-50 text-brandBlue-500 rounded-xl flex items-center justify-center mb-6 overflow-hidden transition-all duration-300 group-hover:bg-brandBlue-500 group-hover:scale-105 p-2">
+            <img 
+              src="img/servicios/vision.png" 
+              alt="Icono Visión" 
+              class="w-full h-full object-contain filter group-hover:brightness-0 group-hover:invert transition-all duration-300"
+              onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fas fa-eye text-2xl\'></i>';"
+            />
+          </div>
+          <h4 class="text-xl font-bold text-gray-900 mb-4">Visión</h4>
+          <p class="text-gray-600 leading-relaxed text-sm">
+            Mejorar día con día en nuestra atención médica especializada, buscando implementar programas de apoyo de forma permanente, buscando contar con instalaciones más funcionales que nos permitan ofrecer una atención más integral a niños y jóvenes de escasos recursos que requieran de nuestro apoyo. 
+          </p>
+        </div>
+
+        <!-- Objetivo -->
+        <div class="group bg-gray-50 border border-gray-100 hover:border-brandRed-100 rounded-2xl p-8 hover:bg-white transition-all duration-300 hover:shadow-xl transform hover:-translate-y-1">
+          <div class="w-14 h-14 bg-brandRed-50 text-brandRed-500 rounded-xl flex items-center justify-center mb-6 overflow-hidden transition-all duration-300 group-hover:bg-brandRed-500 group-hover:scale-105 p-2">
+            <img 
+              src="img/servicios/objetivo.png" 
+              alt="Icono Objetivo" 
+              class="w-full h-full object-contain filter group-hover:brightness-0 group-hover:invert transition-all duration-300"
+              onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fas fa-bullseye text-2xl\'></i>';"
+            />
+          </div>
+          <h4 class="text-xl font-bold text-gray-900 mb-4">Objetivo</h4>
+          <p class="text-gray-600 leading-relaxed text-sm">
+            Apoyar a niños y jóvenes de escasos recursos con problemas cardiovasculares, así como con atención psicológica para él y su familia, buscando la mejor alternativa médica para la solución de su problema. 
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="servicios" class="py-20 bg-gradient-to-b from-gray-50 to-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <h2 class="text-xs font-bold text-brandRed-500 tracking-widest uppercase mb-2">Servicios al Servicio de la Vida</h2>
+        <h3 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Salud preventiva a tu alcance</h3>
+        <p class="mt-4 text-md text-gray-600">
+          Nuestra labor incluye la realización de estudios directos, la conexión telemática con expertos y la educación continua para familias.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        
+        <!-- Servicio 1: Electrocardiogramas -->
+        <div class="flex flex-col sm:flex-row items-start p-6 bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 group">
+          <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-brandBlue-50 text-brandBlue-500 flex items-center justify-center mb-4 sm:mb-0 sm:mr-5 overflow-hidden transition-all duration-300 group-hover:bg-brandBlue-500 p-2">
+            <img 
+              src="img/servicios/estetoscopio.png" 
+              alt="Icono Estetoscopio" 
+              class="w-full h-full object-contain filter group-hover:brightness-0 group-hover:invert transition-all duration-300"
+              onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fas fa-stethoscope text-xl\'></i>';"
+            />
+          </div>
+          <div>
+            <h4 class="text-lg font-bold text-gray-900 mb-2">Electrocardiograma Clínico</h4>
+            <p class="text-gray-600 text-sm leading-relaxed">
+              Realizamos electrocardiogramas clínicos completos de 12 derivaciones de forma gratuita en jornadas comunitarias, con entrega inmediata.
+            </p>
+          </div>
+        </div>
+
+        <!-- Servicio 2: Talleres de prevención -->
+        <div class="flex flex-col sm:flex-row items-start p-6 bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 group">
+          <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-brandBlue-50 text-brandBlue-500 flex items-center justify-center mb-4 sm:mb-0 sm:mr-5 overflow-hidden transition-all duration-300 group-hover:bg-brandBlue-500 p-2">
+            <img 
+              src="img/servicios/prevencion.png" 
+              alt="Icono Prevención" 
+              class="w-full h-full object-contain filter group-hover:brightness-0 group-hover:invert transition-all duration-300"
+              onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fas fa-chalkboard-user text-xl\'></i>';"
+            />
+          </div>
+          <div>
+            <h4 class="text-lg font-bold text-gray-900 mb-2">Talleres de Prevención</h4>
+            <p class="text-gray-600 text-sm leading-relaxed">
+              Impartimos pláticas informativas para educar a la población sobre control de peso, hipertensión, diabetes y hábitos protectores del corazón.
+            </p>
+          </div>
+        </div>
+
+        <!-- Servicio 3: Orientación y Canalización -->
+        <div class="flex flex-col sm:flex-row items-start p-6 bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 group">
+          <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-brandBlue-50 text-brandBlue-500 flex items-center justify-center mb-4 sm:mb-0 sm:mr-5 overflow-hidden transition-all duration-300 group-hover:bg-brandBlue-500 p-2">
+            <img 
+              src="img/servicios/orientacion.png" 
+              alt="Icono Orientación" 
+              class="w-full h-full object-contain filter group-hover:brightness-0 group-hover:invert transition-all duration-300"
+              onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fas fa-route text-xl\'></i>';"
+            />
+          </div>
+          <div>
+            <h4 class="text-lg font-bold text-gray-900 mb-2">Orientación Médica</h4>
+            <p class="text-gray-600 text-sm leading-relaxed">
+              Servicio de asistencia inicial que evalúa tus síntomas y gestiona de manera oportuna tu derivación directa hacia el médico general o especialista idóneo.
+            </p>
+          </div>
+        </div>
+
+        <!-- Servicio 4: Brigadas Móviles -->
+        <div class="flex flex-col sm:flex-row items-start p-6 bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 group">
+          <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-brandBlue-50 text-brandBlue-500 flex items-center justify-center mb-4 sm:mb-0 sm:mr-5 overflow-hidden transition-all duration-300 group-hover:bg-brandBlue-500 p-2">
+            <img 
+              src="img/servicios/jornadas.png" 
+              alt="Icono Jornadas" 
+              class="w-full h-full object-contain filter group-hover:brightness-0 group-hover:invert transition-all duration-300"
+              onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fas fa-truck-medical text-xl\'></i>';"
+            />
+          </div>
+          <div>
+            <h4 class="text-lg font-bold text-gray-900 mb-2">Jornadas de la Salud</h4>
+            <p class="text-gray-600 text-sm leading-relaxed">
+              Brigadas médicas móviles que llevan atención preventiva a comunidades rurales, realizando toma de signos vitales y electrocardiogramas (ECG) en sitio.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN DE DONACIONES INTERACTIVA CON TARJETA BBVA 3D -->
+  <section id="donar" class="py-20 bg-white text-gray-800 relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <h2 class="text-xs font-bold text-brandRed-500 tracking-widest uppercase mb-2">Haz la Diferencia Hoy</h2>
+        <h3 class="text-3xl sm:text-4xl font-extrabold text-gray-900">Únete a nuestra causa y salva vidas</h3>
+        <p class="mt-4 text-md text-gray-600">
+          Haz tu donación directamente mediante transferencia bancaria (SPEI) o calcula el impacto de tu aportación.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch justify-center">
+        
+        <!-- Tarjeta BBVA 3D e información de Transferencia -->
+        <div class="lg:col-span-8 lg:col-start-3 bg-gray-50 rounded-3xl p-6 sm:p-8 border border-gray-200 flex flex-col justify-between shadow-xl">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="bg-brandBlue-50 text-brandBlue-600 border border-brandBlue-100 text-xs font-bold px-3 py-1 rounded-full flex items-center">
+                <i class="fas fa-university mr-1.5"></i> Datos para Transferencia (SPEI)
+              </span>
+            </div>
+            
+            <h4 class="text-xl font-bold text-gray-900 mb-2">Tarjeta Santander Fundación Samantha</h4>
+
+            <!-- Contenedor Canvas 3D de la Tarjeta Santander (Aumentado de h-64 sm:h-72 a h-80 sm:h-96) -->
+            <div class="relative w-full h-80 sm:h-96 rounded-2xl bg-slate-900 overflow-hidden border border-gray-200 shadow-inner flex items-center justify-center group">
+              <div id="bbva-3d-canvas" class="w-full h-full cursor-grab active:cursor-grabbing"></div>
+              
+              <!-- Badge flotante instructivo -->
+              <div class="absolute bottom-3 left-3 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-lg border border-gray-200 text-[10px] text-gray-700 pointer-events-none flex items-center gap-1.5 z-10 shadow-sm">
+                <i class="fas fa-hand-pointer text-brandBlue-500 animate-bounce"></i> Arrastra para girar 3D
+              </div>
+
+              <!-- Botón rápido para girar la tarjeta -->
+              <button onclick="flipBBVACard()" class="absolute top-3 right-3 bg-white/90 hover:bg-brandBlue-500 hover:text-white text-gray-700 px-3 py-1.5 rounded-xl border border-gray-200 text-xs transition-colors flex items-center gap-1 shadow-sm z-10">
+                <i class="fas fa-rotate"></i> Girar
+              </button>
+            </div>
+
+            <!-- Datos bancarios con botón de copia rápida -->
+            <div class="mt-6 space-y-3 bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+              <div class="flex justify-between items-center text-xs sm:text-sm">
+                <span class="text-gray-500">Banco:</span>
+                <span class="font-bold text-gray-900 flex items-center"><i class="fas fa-building text-brandRed-500 mr-1.5"></i> Santander México</span>
+              </div>
+              <div class="flex justify-between items-center text-xs sm:text-sm">
+                <span class="text-gray-500">Beneficiario:</span>
+                <span class="font-bold text-brandRed-500">Fundación Samantha A.C.</span>
+              </div>
+              <div class="flex justify-between items-center text-xs sm:text-sm border-t border-gray-100 pt-3">
+                <span class="text-gray-500">CLABE Interbancaria:</span>
+                <div class="flex items-center space-x-2">
+                  <span id="clabeNum" class="font-mono font-bold text-brandBlue-600 text-sm sm:text-base">0121 8000 1234 5678 90</span>
+                  <button onclick="copyCLABE()" class="bg-brandBlue-500 hover:bg-brandBlue-600 text-white text-xs px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1 shadow-sm">
+                    <i class="fas fa-copy"></i> Copiar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p id="copyToast" class="text-xs text-center text-green-600 font-semibold mt-3 hidden animate-fade-in">
+            <i class="fas fa-check-circle mr-1"></i> ¡CLABE copiada al portapapeles!
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <footer id="contacto" class="bg-gray-950 text-gray-300 pt-20 pb-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-12 pb-12 border-b border-gray-800">
+        
+        <!-- Logo y descripción de footer -->
+        <div class="md:col-span-4 space-y-6">
+          <a href="#inicio" class="flex items-center space-x-3">
+            <div class="w-12 h-12 rounded-full border border-brandRed-500 bg-white flex items-center justify-center overflow-hidden">
+              <img 
+                src="img/logos/logoprincipal.png" 
+                alt="Logo Fundación Samantha" 
+                class="w-full h-full object-cover"
+                onerror="this.src='https://placehold.co/100x100/e03a3c/ffffff?text=FS'"
+              />
+            </div>
+            <div class="flex flex-col">
+              <span class="font-bold text-lg text-white leading-none">Fundación</span>
+              <span class="font-bold text-xs text-brandBlue-500 uppercase tracking-widest leading-none mt-1">Samantha Carolina Quintero Armenta I.A.P.</span>
+            </div>
+          </a>
+          <p class="text-sm text-gray-400 leading-relaxed">
+            Trabajando día a día para extender la salud cardiovascular y prevenir infartos y arritmias silenciosas mediante diagnósticos profesionales y oportunos.
+          </p>
+          <div class="flex space-x-4">
+            <!-- Icono de Facebook -->
+            <a href="https://www.facebook.com/profile.php?id=100068527655974" class="group w-10 h-10 rounded-full bg-gray-900 border border-gray-800 flex items-center justify-center hover:bg-brandRed-500 transition-colors p-2" aria-label="Facebook">
+              <img 
+                src="img/social/facebook.png" 
+                alt="Facebook" 
+                class="w-full h-full object-contain filter group-hover:brightness-0 group-hover:invert transition-all duration-300"
+                onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fab fa-facebook-f text-gray-400 group-hover:text-white transition-colors\'></i>';"
+              />
+            </a>
+            <!-- Icono de Instagram -->
+            <a href="#" class="group w-10 h-10 rounded-full bg-gray-900 border border-gray-800 flex items-center justify-center hover:bg-brandRed-500 transition-colors p-2" aria-label="Instagram">
+              <img 
+                src="img/social/instagram.png" 
+                alt="Instagram" 
+                class="w-full h-full object-contain filter group-hover:brightness-0 group-hover:invert transition-all duration-300"
+                onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fab fa-instagram text-gray-400 group-hover:text-white transition-colors\'></i>';"
+              />
+            </a>
+            <!-- Icono de Whatsapp -->
+            <a href="#" class="group w-10 h-10 rounded-full bg-gray-900 border border-gray-800 flex items-center justify-center hover:bg-brandRed-500 transition-colors p-2" aria-label="Whatsapp">
+              <img 
+                src="img/social/whatsapp.png" 
+                alt="Whatsapp" 
+                class="w-full h-full object-contain filter group-hover:brightness-0 group-hover:invert transition-all duration-300"
+                onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fab fa-whatsapp text-gray-400 group-hover:text-white transition-colors\'></i>';"
+              />
+            </a>
+          </div>
+        </div>
+
+        <!-- Enlaces Rápidos -->
+        <div class="md:col-span-3">
+          <h4 class="text-white font-bold text-md tracking-wider uppercase mb-6">Mapa del Sitio</h4>
+          <ul class="space-y-3 text-sm">
+            <li><a href="#inicio" class="hover:text-brandRed-500 transition-colors">Inicio</a></li>
+            <li><a href="#nosotros" class="hover:text-brandRed-500 transition-colors">Sobre Nosotros</a></li>
+            <li><a href="#servicios" class="hover:text-brandRed-500 transition-colors">Servicios</a></li>
+            <li><a href="#donar" class="hover:text-brandRed-500 transition-colors">Apoyar / Donar</a></li>
+          </ul>
+        </div>
+
+        <!-- Información de contacto -->
+        <div class="md:col-span-5 space-y-4">
+          <h4 class="text-white font-bold text-md tracking-wider uppercase mb-6">Contacto de Emergencia</h4>
+          <p class="text-sm flex items-start">
+            <i class="fas fa-map-marker-alt text-brandRed-500 mt-1 mr-3 w-5 text-center"></i>
+            <span>2237 Golfo de California, Ciudad Obregón, Sonora, México</span>
+          </p>
+          <div class="space-y-2">
+            <p class="text-sm flex items-center">
+              <i class="fas fa-phone text-brandRed-500 mr-3 w-5 text-center"></i>
+              <a href="tel:+526441735806" class="hover:text-brandRed-500 transition-colors duration-200 font-medium">+52 644 173 5806</a>
+            </p>
+            <p class="text-sm flex items-center">
+              <i class="fas fa-phone text-brandRed-500 mr-3 w-5 text-center"></i>
+              <a href="tel:+526442496184" class="hover:text-brandRed-500 transition-colors duration-200 font-medium">+52 644 249 6184</a>
+            </p>
+          </div>
+          <p class="text-sm flex items-center">
+            <i class="fas fa-envelope text-brandRed-500 mr-3 w-5 text-center"></i>
+            <span>fundacionsamanthac@gmail.com</span>
+          </p>
+          <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 mt-2">
+            <p class="text-xs text-brandBlue-500 font-bold mb-1"><i class="fas fa-info-circle mr-1"></i> Horario de Atención</p>
+            <p class="text-xs text-gray-400">Lunes a Viernes de 9:00 AM a 2:00 PM</p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="pt-10 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500 space-y-4 md:space-y-0">
+        <p>&copy; 2026 Fundación Samantha & ECG Vida. Todos los derechos reservados.</p>
+        <p>Agradecemos especialmente el apoyo clínico e institucional de todos nuestros doctores y voluntarios.</p>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Modal interactivo de donación exitosa simulada -->
+  <div id="successModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+    <div class="bg-white text-gray-900 rounded-3xl p-8 max-w-md w-full mx-4 shadow-2xl border border-gray-100 text-center relative">
+      <div class="w-16 h-16 bg-green-100 text-green-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-4">
+        <i class="fas fa-heartbeat animate-pulse"></i>
+      </div>
+      <h3 class="text-2xl font-bold mb-2">¡Muchísimas Gracias!</h3>
+      <p class="text-gray-600 mb-6" id="modalText">Tu generosa aportación de ayuda salvará vidas.</p>
+      <button onclick="closeModal()" class="w-full bg-brandBlue-500 hover:bg-brandBlue-600 text-white font-bold py-3 px-6 rounded-xl transition-colors">
+        Aceptar
+      </button>
+    </div>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

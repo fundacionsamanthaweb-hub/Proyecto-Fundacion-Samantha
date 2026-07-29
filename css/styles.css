@@ -1,0 +1,15 @@
+    /* Animación decorativa de pulso ECG */
+    @keyframes pulse-line {
+      0% { stroke-dashoffset: 1000; }
+      100% { stroke-dashoffset: 0; }
+    }
+    .animate-ecg {
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: pulse-line 6s linear infinite;
+    }
+    
+    /* Transición suave para las imágenes del carrusel */
+    .hero-slide {
+      transition: opacity 1.2s ease-in-out, transform 1.2s ease-in-out;
+    }
