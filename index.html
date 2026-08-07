@@ -18,6 +18,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 
+  <!-- Hoja de estilos personalizada -->
+  <link rel="stylesheet" href="css/styles.css">
+
   <script>
     tailwind.config = {
       theme: {
@@ -44,8 +47,6 @@
       }
     }
   </script>
-  
-  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans antialiased">
 
@@ -78,6 +79,7 @@
           <a href="#inicio" class="nav-link font-semibold text-gray-600 hover:text-brandRed-500 transition-colors">Inicio</a>
           <a href="#nosotros" class="nav-link font-semibold text-gray-600 hover:text-brandRed-500 transition-colors">Nosotros</a>
           <a href="#servicios" class="nav-link font-semibold text-gray-600 hover:text-brandRed-500 transition-colors">Servicios</a>
+          <button onclick="openCitaModal()" class="nav-link font-semibold text-gray-600 hover:text-brandRed-500 transition-colors focus:outline-none cursor-pointer">Apartar Cita</button>
           <a href="#contacto" class="nav-link font-semibold text-gray-600 hover:text-brandRed-500 transition-colors">Contacto</a>
           <a href="#donar" class="bg-brandRed-500 text-white font-bold px-6 py-2.5 rounded-full hover:bg-brandBlue-500 shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5">
             <i class="fas fa-heart mr-2"></i>Donar
@@ -98,6 +100,7 @@
       <a href="#inicio" class="block font-semibold text-gray-700 hover:text-brandRed-500 py-2 border-b border-gray-50">Inicio</a>
       <a href="#nosotros" class="block font-semibold text-gray-700 hover:text-brandRed-500 py-2 border-b border-gray-50">Nosotros</a>
       <a href="#servicios" class="block font-semibold text-gray-700 hover:text-brandRed-500 py-2 border-b border-gray-50">Servicios</a>
+      <button onclick="openCitaModal(); document.getElementById('navLinks').classList.add('hidden');" class="block w-full text-left font-semibold text-gray-700 hover:text-brandRed-500 py-2 border-b border-gray-50">Apartar Cita</button>
       <a href="#contacto" class="block font-semibold text-gray-700 hover:text-brandRed-500 py-2 border-b border-gray-50">Contacto</a>
       <a href="#donar" class="block text-center bg-brandRed-500 text-white font-bold py-3 rounded-xl shadow-md hover:bg-brandBlue-500 transition-colors">
         <i class="fas fa-heart mr-2"></i>Haz tu Donación
@@ -130,35 +133,39 @@
           </div>
         </div>
 
-        <!-- Contenedor del Carrusel de Imágenes de Internet (Unsplash) -->
+        <!-- Contenedor del Carrusel de Imágenes -->
         <div class="lg:col-span-5 flex flex-col items-center justify-center relative">
           <div class="relative w-72 h-72 sm:w-96 sm:h-96 rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-100 flex items-center justify-center transition-transform duration-500 hover:scale-105">
-            <!-- Imagen 1: Enfoque clínico y preventivo infantil -->
+            <!-- Imagen 1 -->
             <img 
               src="img/logos/icono.png" 
               alt="Atención médica de calidad para niños" 
               class="hero-slide absolute inset-0 w-full h-full object-cover scale-100 opacity-100"
+              onerror="this.src='https://placehold.co/400x400/e03a3c/ffffff?text=Fundacion+Samantha'"
             />
 
-            <!-- Imagen 2: Electrocardiograma profesional clínico -->
+            <!-- Imagen 2 -->
             <img 
               src="img/galeria/imagen2.jpeg" 
               alt="Electrocardiograma y monitoreo" 
               class="hero-slide absolute inset-0 w-full h-full object-cover scale-95 opacity-0"
+              onerror="this.src='https://placehold.co/400x400/3b71ca/ffffff?text=Salud+Cardiovascular'"
             />
 
-            <!-- Imagen 3: Jornada de salud y prevención -->
+            <!-- Imagen 3 -->
             <img 
               src="img/galeria/imagen3.jpeg" 
               alt="Prevención y salud familiar" 
-             class="hero-slide absolute inset-0 w-full h-full object-contain bg-white scale-95 opacity-0"
+              class="hero-slide absolute inset-0 w-full h-full object-contain bg-white scale-95 opacity-0"
+              onerror="this.src='https://placehold.co/400x400/e03a3c/ffffff?text=Jornadas+de+Salud'"
             />
 
-            <!-- Imagen 4: Juventud y esperanza de bienestar -->
+            <!-- Imagen 4 -->
             <img 
               src="img/galeria/imagen4.jpeg" 
               alt="Bienestar y esperanza de vida" 
               class="hero-slide absolute inset-0 w-full h-full object-cover scale-95 opacity-0"
+              onerror="this.src='https://placehold.co/400x400/3b71ca/ffffff?text=Esperanza+de+Vida'"
             />
 
             <!-- Indicadores de Puntos (Dots) del Carrusel interactivo -->
@@ -340,6 +347,127 @@
     </div>
   </section>
 
+  <!-- BANNER PARA APARTAR CITA -->
+  <section id="cita-banner" class="py-16 bg-gradient-to-r from-brandRed-50 via-white to-brandBlue-50 border-y border-gray-100">
+    <div class="max-w-5xl mx-auto px-4 text-center">
+      <span class="bg-brandRed-100 text-brandRed-600 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider inline-flex items-center">
+        <i class="fas fa-calendar-alt mr-1.5"></i> Atención Especializada
+      </span>
+      <h3 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mt-4 mb-3">¿Necesitas una consulta o electrocardiograma?</h3>
+      <p class="text-gray-600 max-w-2xl mx-auto mb-8 text-sm sm:text-base">
+        Agenda tu cita de manera rápida y sencilla. Nos pondremos en contacto contigo de forma inmediata a través de WhatsApp.
+      </p>
+      <button onclick="openCitaModal()" class="bg-brandRed-500 hover:bg-brandBlue-500 text-white font-bold px-8 py-4 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 inline-flex items-center text-base sm:text-lg cursor-pointer">
+        <i class="fas fa-calendar-plus mr-3"></i> Apartar Cita Ahora
+      </button>
+    </div>
+  </section>
+
+  <!-- MODAL DE APARTAR CITA -->
+  <div id="citaModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 hidden transition-all duration-300">
+    <div class="bg-white text-gray-800 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl relative border border-gray-100">
+      
+      <!-- Botón de cierre -->
+      <button onclick="closeCitaModal()" class="absolute top-4 right-4 sm:top-6 sm:right-6 text-gray-400 hover:text-gray-700 w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors focus:outline-none" aria-label="Cerrar ventana modal">
+        <i class="fas fa-times text-lg"></i>
+      </button>
+
+      <div class="text-center mb-6 pr-6">
+        <span class="inline-flex items-center space-x-1.5 bg-brandRed-50 text-brandRed-600 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
+          <i class="fas fa-calendar-check text-brandRed-500"></i> Agendamiento Rápido
+        </span>
+        <h3 class="text-2xl sm:text-3xl font-extrabold text-gray-900">Aparta tu cita</h3>
+        <p class="mt-2 text-sm text-gray-600">
+          Completa el formulario y te contactaremos por WhatsApp para confirmar tu cita.
+        </p>
+      </div>
+
+      <form id="citaForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4" novalidate>
+
+        <!-- Servicio -->
+        <div class="sm:col-span-2">
+          <label for="citaServicio" class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Servicio <span class="text-brandRed-500">*</span></label>
+          <select id="citaServicio" name="servicio" required
+            class="w-full px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue-500 focus:border-transparent transition-all">
+            <option value="" disabled selected>Selecciona un servicio</option>
+            <option value="Electrocardiograma Clínico">Electrocardiograma Clínico</option>
+            <option value="Talleres de Prevención">Talleres de Prevención</option>
+            <option value="Orientación Médica">Orientación Médica</option>
+            <option value="Jornadas de la Salud">Jornadas de la Salud</option>
+          </select>
+        </div>
+
+        <!-- Apellido Paterno -->
+        <div>
+          <label for="citaApPaterno" class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Apellido Paterno <span class="text-brandRed-500">*</span></label>
+          <input type="text" id="citaApPaterno" name="apPaterno" required
+            class="w-full px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue-500 focus:border-transparent transition-all"
+            placeholder="Ej. Quintero">
+        </div>
+
+        <!-- Apellido Materno -->
+        <div>
+          <label for="citaApMaterno" class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Apellido Materno <span class="text-brandRed-500">*</span></label>
+          <input type="text" id="citaApMaterno" name="apMaterno" required
+            class="w-full px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue-500 focus:border-transparent transition-all"
+            placeholder="Ej. Armenta">
+        </div>
+
+        <!-- Nombre -->
+        <div class="sm:col-span-2">
+          <label for="citaNombre" class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Nombre <span class="text-brandRed-500">*</span></label>
+          <input type="text" id="citaNombre" name="nombre" required
+            class="w-full px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue-500 focus:border-transparent transition-all"
+            placeholder="Ej. Samantha Carolina">
+        </div>
+
+        <!-- CURP -->
+        <div>
+          <label for="citaCURP" class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">CURP <span class="text-brandRed-500">*</span></label>
+          <input type="text" id="citaCURP" name="curp" required maxlength="18" pattern="^[A-Za-z]{4}\d{6}[A-Za-z]{6}[A-Za-z0-9]\d$"
+            class="w-full px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-800 text-sm uppercase focus:outline-none focus:ring-2 focus:ring-brandBlue-500 focus:border-transparent transition-all"
+            placeholder="18 caracteres">
+          <p class="text-[10px] text-gray-400 mt-1">Formato oficial de 18 caracteres.</p>
+        </div>
+
+        <!-- Edad -->
+        <div>
+          <label for="citaEdad" class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Edad <span class="text-brandRed-500">*</span></label>
+          <input type="number" id="citaEdad" name="edad" required min="0" max="120"
+            class="w-full px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue-500 focus:border-transparent transition-all"
+            placeholder="Ej. 32">
+        </div>
+
+        <!-- Domicilio -->
+        <div class="sm:col-span-2">
+          <label for="citaDomicilio" class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Domicilio <span class="text-brandRed-500">*</span></label>
+          <input type="text" id="citaDomicilio" name="domicilio" required
+            class="w-full px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue-500 focus:border-transparent transition-all"
+            placeholder="Calle, número, colonia, ciudad">
+        </div>
+
+        <!-- Teléfono -->
+        <div class="sm:col-span-2">
+          <label for="citaTelefono" class="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">Teléfono <span class="text-brandRed-500">*</span></label>
+          <input type="tel" id="citaTelefono" name="telefono" required pattern="^\d{10}$" maxlength="10"
+            class="w-full px-4 py-2.5 rounded-xl border border-gray-300 bg-white text-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-brandBlue-500 focus:border-transparent transition-all"
+            placeholder="10 dígitos, ej. 6441234567">
+        </div>
+
+        <!-- Botón de envío -->
+        <div class="sm:col-span-2 pt-2">
+          <button type="submit"
+            class="w-full bg-brandRed-500 hover:bg-brandBlue-500 text-white font-bold text-center px-6 py-3.5 rounded-full shadow-lg transition-all duration-300 transform hover:-translate-y-0.5">
+            <i class="fab fa-whatsapp mr-2"></i>Enviar solicitud por WhatsApp
+          </button>
+        </div>
+
+        <p id="citaError" class="sm:col-span-2 text-xs sm:text-sm text-brandRed-600 font-semibold hidden"></p>
+
+      </form>
+    </div>
+  </div>
+
   <!-- SECCIÓN DE DONACIONES INTERACTIVA CON TARJETA BBVA 3D -->
   <section id="donar" class="py-20 bg-white text-gray-800 relative overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -365,7 +493,7 @@
             
             <h4 class="text-xl font-bold text-gray-900 mb-2">Tarjeta Santander Fundación Samantha</h4>
 
-            <!-- Contenedor Canvas 3D de la Tarjeta Santander (Aumentado de h-64 sm:h-72 a h-80 sm:h-96) -->
+            <!-- Contenedor Canvas 3D de la Tarjeta Santander -->
             <div class="relative w-full h-80 sm:h-96 rounded-2xl bg-slate-900 overflow-hidden border border-gray-200 shadow-inner flex items-center justify-center group">
               <div id="bbva-3d-canvas" class="w-full h-full cursor-grab active:cursor-grabbing"></div>
               
@@ -528,6 +656,7 @@
     </div>
   </div>
 
+  <!-- Script de interacción del sitio -->
   <script src="js/script.js"></script>
 </body>
 </html>
