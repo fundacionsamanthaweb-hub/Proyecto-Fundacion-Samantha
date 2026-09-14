@@ -151,7 +151,7 @@ if (citaModalEl) {
 }
 
 // Envío del formulario de citas por WhatsApp
-const WHATSAPP_NUMERO = "526442137043"; // Número de la Fundación (formato internacional sin '+')
+const WHATSAPP_NUMERO = "526442496184"; // Número de la Fundación (formato internacional sin '+')
 
 const citaForm = document.getElementById('citaForm');
 if (citaForm) {
