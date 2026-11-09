@@ -47,18 +47,15 @@ let slideInterval;
 function showSlide(index) {
   if (!slides.length || !dots.length) return;
 
-  // Reiniciamos todas las diapositivas
   slides.forEach((slide) => {
     slide.classList.remove('opacity-100', 'scale-100');
     slide.classList.add('opacity-0', 'scale-95');
   });
-  // Deseleccionamos los indicadores
   dots.forEach((dot) => {
     dot.classList.remove('bg-brandRed-500', 'w-3.5', 'h-3.5');
     dot.classList.add('bg-white/60', 'w-3', 'h-3');
   });
 
-  // Activamos la diapositiva en el índice actual
   slides[index].classList.remove('opacity-0', 'scale-95');
   slides[index].classList.add('opacity-100', 'scale-100');
 
@@ -68,56 +65,19 @@ function showSlide(index) {
   currentSlide = index;
 }
 
-// Avanza la diapositiva secuencialmente
 function nextSlide() {
-  let next = (currentSlide + 1) % slides.length;
+  const next = (currentSlide + 1) % slides.length;
   showSlide(next);
 }
 
-// Salta a una diapositiva concreta al pulsar sobre su indicador
 function goToSlide(index) {
   showSlide(index);
   clearInterval(slideInterval);
   startSlideShow();
 }
 
-// Inicia el temporizador de 5 segundos para la reproducción automática
 function startSlideShow() {
   slideInterval = setInterval(nextSlide, 5000);
-}
-
-// Widgets interactivos para la calculadora de donativos
-let selectedAmount = 50;
-
-function updateDonation(amount, description) {
-  selectedAmount = amount;
-  const impactText = document.getElementById('impactText');
-  if (impactText) impactText.textContent = `"${description}"`;
-
-  // Actualizar visualmente los botones de donación
-  document.querySelectorAll('.donation-btn').forEach(btn => {
-    const btnAmount = parseInt(btn.getAttribute('data-amount'), 10);
-    if (btnAmount === amount) {
-      btn.className = "donation-btn py-3 px-2 rounded-xl text-center font-bold text-xs sm:text-sm bg-brandRed-500 text-white transition-colors focus:ring-2 focus:ring-brandRed-500";
-    } else {
-      btn.className = "donation-btn py-3 px-2 rounded-xl text-center font-bold text-xs sm:text-sm bg-white/10 hover:bg-brandRed-500 transition-colors focus:ring-2 focus:ring-brandRed-500";
-    }
-  });
-}
-
-// Gestión del cuadro modal de simulación
-function triggerDonation() {
-  const modal = document.getElementById('successModal');
-  const modalText = document.getElementById('modalText');
-  if (modalText) {
-    modalText.textContent = `Has seleccionado donar $${selectedAmount} USD. Tu aporte ayudará directamente a financiar la salud de muchas personas.`;
-  }
-  if (modal) modal.classList.remove('hidden');
-}
-
-function closeModal() {
-  const modal = document.getElementById('successModal');
-  if (modal) modal.classList.add('hidden');
 }
 
 function openCitaModal() {
@@ -170,7 +130,6 @@ if (citaForm) {
     const domicilio = document.getElementById('citaDomicilio').value.trim();
     const telefono = document.getElementById('citaTelefono').value.trim();
 
-    // Validación de campos requeridos
     if (!servicio || !apPaterno || !apMaterno || !nombre || !curp || !edad || !domicilio || !telefono) {
       if (citaError) {
         citaError.textContent = "Por favor completa todos los campos.";
@@ -179,7 +138,6 @@ if (citaForm) {
       return;
     }
 
-    // Validación de formato de CURP (18 caracteres)
     const curpRegex = /^[A-Z]{4}\d{6}[A-Z]{6}[A-Z0-9]\d$/;
     if (!curpRegex.test(curp)) {
       if (citaError) {
@@ -189,7 +147,6 @@ if (citaForm) {
       return;
     }
 
-    // Validación de teléfono (10 dígitos)
     const telefonoRegex = /^\d{10}$/;
     if (!telefonoRegex.test(telefono)) {
       if (citaError) {
@@ -199,7 +156,6 @@ if (citaForm) {
       return;
     }
 
-    // Construcción del mensaje prellenado
     const mensaje =
       `Hola, quiero apartar una cita en Fundación Samantha:\n\n` +
       `*Servicio:* ${servicio}\n` +
@@ -219,528 +175,534 @@ if (citaForm) {
   });
 }
 
-// Copiar CLABE al portapapeles
-function copyCLABE() {
-  const clabeText = "012180001234567890";
-  const tempInput = document.createElement("input");
-  tempInput.value = clabeText;
+function copyTextFallback(text) {
+  const tempInput = document.createElement('textarea');
+  tempInput.value = text;
+  tempInput.setAttribute('readonly', '');
+  tempInput.style.position = 'fixed';
+  tempInput.style.opacity = '0';
   document.body.appendChild(tempInput);
   tempInput.select();
-  document.execCommand("copy");
-  document.body.removeChild(tempInput);
-
-  const toast = document.getElementById("copyToast");
-  if (toast) {
-    toast.classList.remove("hidden");
-    setTimeout(() => toast.classList.add("hidden"), 3000);
-  }
-}
-
-// Three.js High-Definition 3D Card Engine
-let bbvaScene, bbvaCamera, bbvaRenderer, bbvaCardMesh, bbvaControls;
-let isBBVARotating = true;
-let targetBBVARotationY = 0;
-
-function renderFallbackCard(container) {
-  container.innerHTML = `
-    <div class="w-full h-full p-6 rounded-2xl bg-gradient-to-br from-[#ec0000] via-[#cc0000] to-[#880000] text-white flex flex-col justify-between shadow-xl border border-red-400/30 relative overflow-hidden">
-      <div class="flex justify-between items-center z-10">
-        <span class="font-extrabold text-2xl tracking-wider text-white flex items-center gap-2">
-          <i class="fas fa-fire text-white"></i> Santander
-        </span>
-        <span class="text-xs font-semibold text-white/90">debit</span>
-      </div>
-      <div class="my-2 z-10">
-        <div class="w-10 h-7 bg-amber-400 rounded-md border border-amber-600 mb-2"></div>
-        <p class="font-mono text-sm sm:text-base font-bold tracking-widest text-white drop-shadow">0121 8000 1234 5678 90</p>
-        <p class="text-[10px] text-white/80 mt-1">CLABE INTERBANCARIA (SPEI)</p>
-      </div>
-      <div class="flex justify-between items-end z-10">
-        <p class="font-bold text-xs uppercase tracking-wider text-white">FUNDACIÓN SAMANTHA A.C.</p>
-        <div class="flex -space-x-2">
-          <div class="w-6 h-6 rounded-full bg-[#eb001b]"></div>
-          <div class="w-6 h-6 rounded-full bg-[#ff5f00] opacity-90"></div>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function initBBVA3DCard() {
-  const container = document.getElementById('bbva-3d-canvas');
-  if (!container) return;
-
-  if (typeof THREE === 'undefined') {
-    renderFallbackCard(container);
-    return;
-  }
 
   try {
-    const initialW = container.clientWidth || 350;
-    const initialH = container.clientHeight || 220;
+    return document.execCommand('copy');
+  } finally {
+    tempInput.remove();
+  }
+}
 
-    // Create Canvases for Front, Back and Bump Map
-    const canvasF = document.createElement('canvas');
-    canvasF.width = 1024;
-    canvasF.height = 648;
-    const ctxF = canvasF.getContext('2d');
+async function copyCLABE() {
+  const clabeText = '014767220005533717';
+  const status = document.getElementById('copyToast');
 
-    const canvasB = document.createElement('canvas');
-    canvasB.width = 1024;
-    canvasB.height = 648;
-    const ctxB = canvasB.getContext('2d');
-
-    const canvasBump = document.createElement('canvas');
-    canvasBump.width = 1024;
-    canvasBump.height = 648;
-    const ctxBump = canvasBump.getContext('2d');
-
-    // Helper for rounded rects on canvas
-    function drawRoundRect(ctx, x, y, width, height, radius, fill, stroke) {
-      ctx.beginPath();
-      ctx.moveTo(x + radius, y);
-      ctx.lineTo(x + width - radius, y);
-      ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-      ctx.lineTo(x + width, y + height - radius);
-      ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-      ctx.lineTo(x + radius, y + height);
-      ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-      ctx.lineTo(x, y + radius);
-      ctx.quadraticCurveTo(x, y, x + radius, y);
-      ctx.closePath();
-      if (fill) ctx.fill();
-      if (stroke) ctx.stroke();
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(clabeText);
+    } else if (!copyTextFallback(clabeText)) {
+      throw new Error('El navegador no permitió copiar al portapapeles.');
     }
 
-    // Draw EMV Chip
-    function drawChip(ctx, x, y, w, h) {
-      ctx.save();
-      const chipGrad = ctx.createLinearGradient(x, y, x + w, y + h);
-      chipGrad.addColorStop(0, "#fef08a");
-      chipGrad.addColorStop(0.5, "#eab308");
-      chipGrad.addColorStop(1, "#ca8a04");
+    if (status) status.textContent = '¡CLABE copiada al portapapeles!';
+  } catch (error) {
+    if (status) status.textContent = 'No se pudo copiar. Selecciona la CLABE y cópiala manualmente.';
+    console.error('No se pudo copiar la CLABE.', error);
+  }
+}
 
-      ctx.fillStyle = chipGrad;
-      drawRoundRect(ctx, x, y, w, h, 14, true, false);
+const donationCard = document.getElementById('donationCard');
+const donationCardCanvas = document.getElementById('donationCardCanvas');
+let donationRotationX = 0;
+let donationRotationY = 0;
+let donationCardMesh = null;
+let donationCardRenderer = null;
+let donationCardTargetY = 0;
 
-      ctx.strokeStyle = "#854d0e";
-      ctx.lineWidth = 1.5;
-      drawRoundRect(ctx, x, y, w, h, 14, false, true);
+function renderDonationCardRotation() {
+  if (!donationCard) return;
 
-      ctx.strokeStyle = "rgba(113, 63, 18, 0.6)";
-      ctx.lineWidth = 1.5;
+  const isFlipped = donationCardMesh
+    ? Math.cos(donationCardMesh.rotation.y) < 0
+    : Math.cos(donationRotationY * Math.PI / 180) < 0;
+  donationCard.setAttribute('aria-pressed', String(isFlipped));
 
-      ctx.beginPath();
-      ctx.moveTo(x, y + h * 0.5);
-      ctx.lineTo(x + w, y + h * 0.5);
-      ctx.stroke();
+  const stage = donationCard.closest('.donation-card-stage');
+  if (stage) {
+    const yaw = donationCardMesh ? donationCardMesh.rotation.y : donationRotationY * Math.PI / 180;
+    const pitch = donationCardMesh ? donationCardMesh.rotation.x : donationRotationX * Math.PI / 180;
+    const edgeOn = Math.abs(Math.cos(yaw));
+    stage.style.setProperty('--shadow-x', `${Math.sin(yaw) * 18}px`);
+    stage.style.setProperty('--shadow-y', `${8 + Math.abs(pitch) * 10}px`);
+    stage.style.setProperty('--shadow-scale', `${0.62 + edgeOn * 0.38}`);
+    stage.style.setProperty('--shadow-opacity', `${0.18 + edgeOn * 0.2}`);
+  }
 
-      ctx.beginPath();
-      ctx.moveTo(x + w * 0.33, y);
-      ctx.lineTo(x + w * 0.33, y + h);
-      ctx.moveTo(x + w * 0.66, y);
-      ctx.lineTo(x + w * 0.66, y + h);
-      ctx.stroke();
+  if (!donationCardMesh) {
+    const normalizedYaw = ((donationRotationY % 360) + 360) % 360;
+    const displayedYaw = isFlipped
+      ? normalizedYaw - 180
+      : normalizedYaw > 270 ? normalizedYaw - 360 : normalizedYaw;
+    donationCard.style.setProperty('--card-rotate-x', `${donationRotationX}deg`);
+    donationCard.style.setProperty('--card-rotate-y', `${displayedYaw}deg`);
+    donationCard.classList.toggle('is-flipped', isFlipped);
+  }
+}
 
-      drawRoundRect(ctx, x + w * 0.22, y + h * 0.22, w * 0.56, h * 0.56, 6, false, true);
-      ctx.restore();
+function flipDonationCard() {
+  if (!donationCard) return;
+  const isFlipped = donationCardMesh
+    ? Math.cos(donationCardMesh.rotation.y) < 0
+    : Math.cos(donationRotationY * Math.PI / 180) < 0;
+
+  if (donationCardMesh) {
+    donationCardTargetY = donationCardMesh.rotation.y + (isFlipped ? -Math.PI : Math.PI);
+  } else {
+    donationRotationY = isFlipped ? 0 : 180;
+  }
+  renderDonationCardRotation();
+}
+
+function drawDonationCardTextures() {
+  const width = 1024;
+  const height = 648;
+  const frontCanvas = document.createElement('canvas');
+  const backCanvas = document.createElement('canvas');
+  frontCanvas.width = backCanvas.width = width;
+  frontCanvas.height = backCanvas.height = height;
+
+  const front = frontCanvas.getContext('2d');
+  const back = backCanvas.getContext('2d');
+  if (!front || !back) throw new Error('No se pudieron crear las texturas de la tarjeta.');
+
+  const frontGradient = front.createLinearGradient(0, 0, width, height);
+  frontGradient.addColorStop(0, '#ed0000');
+  frontGradient.addColorStop(.52, '#e60000');
+  frontGradient.addColorStop(1, '#c90000');
+  front.fillStyle = frontGradient;
+  front.fillRect(0, 0, width, height);
+
+  front.fillStyle = 'rgba(110, 0, 0, .18)';
+  front.beginPath();
+  front.moveTo(620, height);
+  front.lineTo(width, height);
+  front.lineTo(width, 360);
+  front.lineTo(850, 360);
+  front.lineTo(850, 500);
+  front.lineTo(620, 500);
+  front.closePath();
+  front.fill();
+
+  front.save();
+  front.translate(90, 88);
+  front.scale(.9, .9);
+  front.fillStyle = '#dedede';
+  front.beginPath();
+  front.moveTo(25, 2);
+  front.bezierCurveTo(30, 26, 4, 39, 3, 62);
+  front.bezierCurveTo(1, 82, 20, 98, 43, 101);
+  front.bezierCurveTo(29, 82, 35, 67, 51, 49);
+  front.bezierCurveTo(67, 30, 61, 13, 57, 0);
+  front.bezierCurveTo(53, 24, 35, 37, 25, 2);
+  front.fill();
+  front.font = '600 60px Montserrat, Arial, sans-serif';
+  front.fillText('Santander', 92, 82);
+  front.restore();
+
+  front.fillStyle = '#fff';
+  front.font = '700 38px Montserrat, Arial, sans-serif';
+  front.textAlign = 'right';
+  front.fillText('Débito', 950, 120);
+  front.textAlign = 'left';
+
+  const chipGradient = front.createLinearGradient(90, 225, 250, 365);
+  chipGradient.addColorStop(0, '#fff0bd');
+  chipGradient.addColorStop(.5, '#d7bd77');
+  chipGradient.addColorStop(1, '#f8e6a8');
+  front.fillStyle = chipGradient;
+  front.strokeStyle = '#866d39';
+  front.lineWidth = 5;
+  front.beginPath();
+  front.moveTo(108, 225);
+  front.lineTo(232, 225);
+  front.quadraticCurveTo(250, 225, 250, 243);
+  front.lineTo(250, 332);
+  front.quadraticCurveTo(250, 350, 232, 350);
+  front.lineTo(108, 350);
+  front.quadraticCurveTo(90, 350, 90, 332);
+  front.lineTo(90, 243);
+  front.quadraticCurveTo(90, 225, 108, 225);
+  front.fill();
+  front.stroke();
+  front.strokeStyle = 'rgba(100, 75, 35, .7)';
+  front.lineWidth = 3;
+  front.beginPath();
+  front.moveTo(145, 227); front.lineTo(145, 348);
+  front.moveTo(195, 227); front.lineTo(195, 348);
+  front.moveTo(92, 285); front.lineTo(248, 285);
+  front.stroke();
+
+  front.strokeStyle = '#f2dddd';
+  front.lineWidth = 10;
+  front.lineCap = 'round';
+  for (let i = 1; i <= 3; i++) {
+    front.beginPath();
+    front.arc(300, 286, i * 27, -Math.PI / 3, Math.PI / 3);
+    front.stroke();
+  }
+
+  front.fillStyle = 'rgba(255,255,255,.82)';
+  front.font = '500 34px Montserrat, Arial, sans-serif';
+  front.fillText('Santander México', 90, 430);
+  front.fillStyle = '#fff';
+  front.font = '600 54px monospace';
+  front.shadowColor = 'rgba(70,0,0,.4)';
+  front.shadowBlur = 5;
+  front.shadowOffsetY = 3;
+  front.fillText('0147 6722 0005 5337 17', 90, 510);
+  front.shadowColor = 'transparent';
+  front.shadowBlur = 0;
+  front.shadowOffsetY = 0;
+  front.font = '700 25px Montserrat, Arial, sans-serif';
+  front.fillText('FUNDACION SAMANTHA CAROLINA QUINTERO ARMENTA IAP', 90, 580, 720);
+
+  front.fillStyle = '#eb001b';
+  front.beginPath();
+  front.arc(850, 520, 58, 0, Math.PI * 2);
+  front.fill();
+  front.fillStyle = '#f79e1b';
+  front.beginPath();
+  front.arc(920, 520, 58, 0, Math.PI * 2);
+  front.fill();
+  front.fillStyle = '#fff';
+  front.font = '600 20px Arial, sans-serif';
+  front.textAlign = 'center';
+  front.fillText('mastercard', 885, 602);
+  front.textAlign = 'left';
+
+  const backGradient = back.createLinearGradient(0, 0, width, height);
+  backGradient.addColorStop(0, '#e00000');
+  backGradient.addColorStop(.6, '#c90000');
+  backGradient.addColorStop(1, '#a90000');
+  back.fillStyle = backGradient;
+  back.fillRect(0, 0, width, height);
+  back.fillStyle = '#b90000';
+  back.fillRect(0, 0, width, 105);
+  back.fillStyle = 'rgba(255,255,255,.9)';
+  back.font = '700 25px Montserrat, Arial, sans-serif';
+  back.fillText('SANTANDER MÉXICO', 58, 65);
+  back.textAlign = 'right';
+  back.fillText('CUENTA PARA DONATIVOS', 966, 65);
+  back.textAlign = 'left';
+
+  const stripeGradient = back.createLinearGradient(0, 110, 0, 285);
+  stripeGradient.addColorStop(0, '#e8e3e4');
+  stripeGradient.addColorStop(.5, '#c7bfc1');
+  stripeGradient.addColorStop(1, '#eee9ea');
+  back.fillStyle = stripeGradient;
+  back.fillRect(0, 108, width, 175);
+  back.strokeStyle = 'rgba(255,255,255,.22)';
+  back.lineWidth = 2;
+  for (let y = 116; y < 280; y += 12) {
+    back.beginPath();
+    back.moveTo(0, y);
+    back.lineTo(width, y);
+    back.stroke();
+  }
+
+  back.fillStyle = 'rgba(255,255,255,.9)';
+  back.font = '700 26px Montserrat, Arial, sans-serif';
+  back.fillText('CLABE INTERBANCARIA · SPEI', 88, 350);
+  back.fillStyle = '#fff8f8';
+  back.fillRect(88, 380, 848, 105);
+  back.strokeStyle = 'rgba(100,35,35,.25)';
+  back.lineWidth = 2;
+  for (let x = 95; x < 930; x += 22) {
+    back.beginPath();
+    back.moveTo(x, 482);
+    back.lineTo(x + 75, 382);
+    back.stroke();
+  }
+  back.fillStyle = '#542626';
+  back.font = '700 51px monospace';
+  back.fillText('0147 6722 0005 5337 17', 112, 448);
+  back.fillStyle = 'rgba(255,255,255,.72)';
+  back.font = '700 23px Montserrat, Arial, sans-serif';
+  back.fillText('TITULAR DE LA CUENTA', 88, 535);
+  back.fillStyle = '#fff';
+  back.font = '700 25px Montserrat, Arial, sans-serif';
+  back.fillText('FUNDACION SAMANTHA CAROLINA QUINTERO ARMENTA IAP', 88, 585, 845);
+  back.textAlign = 'right';
+  back.font = '600 21px Montserrat, Arial, sans-serif';
+  back.fillText('Santander México', 950, 620);
+  back.textAlign = 'left';
+
+  return { frontCanvas, backCanvas };
+}
+
+function createRoundedDonationCardGeometry(THREE) {
+  const width = 3.6;
+  const height = width / 1.586;
+  const radius = .22;
+  const shape = new THREE.Shape();
+  const left = -width / 2;
+  const bottom = -height / 2;
+  shape.moveTo(left + radius, bottom);
+  shape.lineTo(left + width - radius, bottom);
+  shape.quadraticCurveTo(left + width, bottom, left + width, bottom + radius);
+  shape.lineTo(left + width, bottom + height - radius);
+  shape.quadraticCurveTo(left + width, bottom + height, left + width - radius, bottom + height);
+  shape.lineTo(left + radius, bottom + height);
+  shape.quadraticCurveTo(left, bottom + height, left, bottom + height - radius);
+  shape.lineTo(left, bottom + radius);
+  shape.quadraticCurveTo(left, bottom, left + radius, bottom);
+
+  const geometry = new THREE.ExtrudeGeometry(shape, {
+    depth: .075,
+    bevelEnabled: true,
+    bevelThickness: .012,
+    bevelSize: .012,
+    bevelSegments: 4,
+    curveSegments: 12
+  });
+  geometry.center();
+  geometry.computeVertexNormals();
+
+  const position = geometry.attributes.position;
+  const normal = geometry.attributes.normal;
+  const uv = geometry.attributes.uv;
+  const index = geometry.index;
+  const front = [];
+  const back = [];
+  const sides = [];
+  const triangleCount = index ? index.count / 3 : position.count / 3;
+
+  for (let triangle = 0; triangle < triangleCount; triangle++) {
+    const a = index ? index.getX(triangle * 3) : triangle * 3;
+    const b = index ? index.getX(triangle * 3 + 1) : triangle * 3 + 1;
+    const c = index ? index.getX(triangle * 3 + 2) : triangle * 3 + 2;
+    const avgZ = (normal.getZ(a) + normal.getZ(b) + normal.getZ(c)) / 3;
+    const target = avgZ > .4 ? front : avgZ < -.4 ? back : sides;
+    target.push(a, b, c);
+  }
+
+  geometry.setIndex([...front, ...back, ...sides]);
+  geometry.clearGroups();
+  geometry.addGroup(0, front.length, 0);
+  geometry.addGroup(front.length, back.length, 1);
+  geometry.addGroup(front.length + back.length, sides.length, 2);
+
+  for (let vertex = 0; vertex < position.count; vertex++) {
+    const x = position.getX(vertex);
+    const y = position.getY(vertex);
+    const zNormal = normal.getZ(vertex);
+    if (zNormal < -.4) {
+      uv.setXY(vertex, (width / 2 - x) / width, (y + height / 2) / height);
+    } else {
+      uv.setXY(vertex, (x + width / 2) / width, (y + height / 2) / height);
+    }
+  }
+  uv.needsUpdate = true;
+  return geometry;
+}
+
+function initializeDonationCard3D() {
+  if (!donationCardCanvas || typeof THREE === 'undefined') return;
+
+  try {
+    const { frontCanvas, backCanvas } = drawDonationCardTextures();
+    const textureFront = new THREE.CanvasTexture(frontCanvas);
+    const textureBack = new THREE.CanvasTexture(backCanvas);
+    textureFront.colorSpace = THREE.SRGBColorSpace || undefined;
+    textureBack.colorSpace = THREE.SRGBColorSpace || undefined;
+    if ('encoding' in textureFront && THREE.sRGBEncoding) {
+      textureFront.encoding = THREE.sRGBEncoding;
+      textureBack.encoding = THREE.sRGBEncoding;
     }
 
-    // Draw Santander Front Texture
-    function drawSantanderFront() {
-      const grad = ctxF.createLinearGradient(0, 0, 1024, 648);
-      grad.addColorStop(0, '#e60000');
-      grad.addColorStop(0.5, '#cc0000');
-      grad.addColorStop(1, '#990000');
-      ctxF.fillStyle = grad;
-      ctxF.fillRect(0, 0, 1024, 648);
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(36, 1.586, .1, 100);
+    camera.position.set(0, 0, 4.65);
 
-      ctxF.fillStyle = 'rgba(150, 0, 0, 0.45)';
-      ctxF.beginPath();
-      ctxF.moveTo(520, 648);
-      ctxF.lineTo(1024, 648);
-      ctxF.lineTo(1024, 260);
-      ctxF.lineTo(760, 260);
-      ctxF.lineTo(760, 420);
-      ctxF.lineTo(520, 420);
-      ctxF.closePath();
-      ctxF.fill();
-
-      ctxF.fillStyle = 'rgba(120, 0, 0, 0.55)';
-      ctxF.beginPath();
-      ctxF.moveTo(680, 648);
-      ctxF.lineTo(1024, 648);
-      ctxF.lineTo(1024, 380);
-      ctxF.lineTo(840, 380);
-      ctxF.lineTo(840, 500);
-      ctxF.lineTo(680, 500);
-      ctxF.closePath();
-      ctxF.fill();
-
-      ctxF.fillStyle = 'rgba(90, 0, 0, 0.6)';
-      ctxF.beginPath();
-      ctxF.moveTo(820, 648);
-      ctxF.lineTo(1024, 648);
-      ctxF.lineTo(1024, 480);
-      ctxF.lineTo(820, 480);
-      ctxF.closePath();
-      ctxF.fill();
-
-      // Santander Flame Logo
-      ctxF.save();
-      ctxF.fillStyle = '#ffffff';
-      ctxF.beginPath();
-      ctxF.moveTo(95, 115);
-      ctxF.bezierCurveTo(70, 115, 50, 95, 50, 75);
-      ctxF.bezierCurveTo(50, 50, 75, 40, 82, 25);
-      ctxF.bezierCurveTo(86, 18, 85, 10, 80, 5);
-      ctxF.bezierCurveTo(95, 12, 100, 25, 96, 35);
-      ctxF.bezierCurveTo(92, 45, 82, 52, 85, 68);
-      ctxF.bezierCurveTo(87, 75, 95, 78, 102, 72);
-      ctxF.bezierCurveTo(112, 63, 110, 48, 105, 38);
-      ctxF.bezierCurveTo(120, 50, 125, 70, 118, 88);
-      ctxF.bezierCurveTo(114, 102, 105, 115, 95, 115);
-      ctxF.fill();
-
-      ctxF.beginPath();
-      ctxF.moveTo(70, 78);
-      ctxF.bezierCurveTo(62, 78, 58, 70, 60, 62);
-      ctxF.bezierCurveTo(62, 54, 70, 48, 72, 40);
-      ctxF.bezierCurveTo(76, 48, 74, 58, 68, 64);
-      ctxF.bezierCurveTo(65, 67, 65, 74, 70, 78);
-      ctxF.fill();
-
-      ctxF.font = 'bold 54px Montserrat, sans-serif, Arial';
-      ctxF.fillText('Santander', 140, 95);
-      ctxF.restore();
-
-      // "debit" text top right
-      ctxF.fillStyle = '#ffffff';
-      ctxF.font = '40px Montserrat, sans-serif, Arial';
-      ctxF.fillText('debit', 860, 95);
-
-      // EMV Chip
-      drawChip(ctxF, 80, 195, 115, 85);
-
-      // Contactless Wave Icon
-      ctxF.strokeStyle = '#ffffff';
-      ctxF.lineWidth = 4.5;
-      ctxF.lineCap = 'round';
-      for (let i = 1; i <= 3; i++) {
-        ctxF.beginPath();
-        ctxF.arc(225, 237, i * 14, -Math.PI / 3.2, Math.PI / 3.2);
-        ctxF.stroke();
-      }
-
-      // Card Number
-      ctxF.fillStyle = '#f1f5f9';
-      ctxF.font = 'bold 48px monospace';
-      ctxF.shadowColor = 'rgba(0,0,0,0.7)';
-      ctxF.shadowOffsetX = 2;
-      ctxF.shadowOffsetY = 2;
-      ctxF.shadowBlur = 4;
-      ctxF.fillText('0121 8000 1234 5678 90', 80, 380);
-
-      // Expiry
-      ctxF.font = 'bold 14px Montserrat, sans-serif, Arial';
-      ctxF.fillText('VALID', 400, 440);
-      ctxF.fillText('THRU', 400, 456);
-
-      ctxF.font = 'bold 30px monospace';
-      ctxF.fillText('12/30', 465, 452);
-
-      // Cardholder Name
-      ctxF.font = 'bold 34px Montserrat, sans-serif, Arial';
-      ctxF.fillText('FUNDACIÓN SAMANTHA A.C.', 80, 540);
-
-      // Reset Shadow
-      ctxF.shadowColor = 'transparent';
-      ctxF.shadowOffsetX = 0;
-      ctxF.shadowOffsetY = 0;
-      ctxF.shadowBlur = 0;
-
-      // Mastercard Logo
-      ctxF.save();
-      ctxF.fillStyle = '#eb001b';
-      ctxF.beginPath();
-      ctxF.arc(855, 515, 42, 0, Math.PI * 2);
-      ctxF.fill();
-
-      ctxF.fillStyle = '#f79e1b';
-      ctxF.beginPath();
-      ctxF.arc(915, 515, 42, 0, Math.PI * 2);
-      ctxF.fill();
-
-      ctxF.fillStyle = '#ff5f00';
-      ctxF.beginPath();
-      ctxF.arc(855, 515, 42, 0, Math.PI * 2);
-      ctxF.clip();
-      ctxF.beginPath();
-      ctxF.arc(915, 515, 42, 0, Math.PI * 2);
-      ctxF.fill();
-
-      ctxF.restore();
-
-      ctxF.fillStyle = '#ffffff';
-      ctxF.font = '600 18px Montserrat, sans-serif, Arial';
-      ctxF.textAlign = 'center';
-      ctxF.fillText('mastercard.', 885, 578);
-      ctxF.textAlign = 'left';
+    donationCardRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    donationCardRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    donationCardRenderer.shadowMap.enabled = true;
+    donationCardRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    if ('outputColorSpace' in donationCardRenderer && THREE.SRGBColorSpace) {
+      donationCardRenderer.outputColorSpace = THREE.SRGBColorSpace;
+    } else if (THREE.sRGBEncoding) {
+      donationCardRenderer.outputEncoding = THREE.sRGBEncoding;
     }
+    donationCardCanvas.replaceChildren(donationCardRenderer.domElement);
+    donationCard.classList.add('has-webgl');
 
-    // Draw Santander Back Texture
-    function drawSantanderBack() {
-      const grad = ctxB.createLinearGradient(0, 0, 1024, 648);
-      grad.addColorStop(0, '#b30000');
-      grad.addColorStop(1, '#800000');
-      ctxB.fillStyle = grad;
-      ctxB.fillRect(0, 0, 1024, 648);
-
-      ctxB.fillStyle = '#1a1a1a';
-      ctxB.fillRect(0, 60, 1024, 110);
-
-      ctxB.fillStyle = '#f8fafc';
-      ctxB.fillRect(80, 240, 600, 70);
-
-      ctxB.strokeStyle = '#cbd5e1';
-      ctxB.lineWidth = 2;
-      for (let i = 90; i < 670; i += 22) {
-        ctxB.beginPath();
-        ctxB.moveTo(i, 240);
-        ctxB.lineTo(i - 15, 310);
-        ctxB.stroke();
-      }
-
-      ctxB.fillStyle = '#ffffff';
-      ctxB.fillRect(720, 240, 120, 70);
-
-      ctxB.fillStyle = '#0f172a';
-      ctxB.font = 'bold 32px monospace';
-      ctxB.fillText('888', 755, 285);
-
-      ctxB.fillStyle = '#fecdd3';
-      ctxB.font = 'bold 18px Montserrat, sans-serif, Arial';
-      ctxB.fillText('FIRMA AUTORIZADA', 80, 225);
-      ctxB.fillText('CVV', 720, 225);
-
-      ctxB.fillStyle = '#ffffff';
-      ctxB.font = '18px Montserrat, sans-serif, Arial';
-      ctxB.fillText('Esta tarjeta pertenece a Fundación Samantha A.C.', 80, 380);
-      ctxB.fillText('Banco Destino: Santander México', 80, 420);
-      ctxB.fillText('Atención telefónica: +52 644 173 5806', 80, 460);
-    }
-
-    function drawBBVABump() {
-      ctxBump.fillStyle = "#808080";
-      ctxBump.fillRect(0, 0, 1024, 648);
-
-      ctxBump.fillStyle = "#ffffff";
-      ctxBump.font = 'bold 46px monospace';
-      ctxBump.fillText('0121 8000 1234 5678 90', 80, 380);
-
-      ctxBump.font = 'bold 34px Montserrat, sans-serif, Arial';
-      ctxBump.fillText('FUNDACIÓN SAMANTHA A.C.', 80, 540);
-    }
-
-    drawSantanderFront();
-    drawSantanderBack();
-    drawBBVABump();
-
-    const textureFront = new THREE.CanvasTexture(canvasF);
-    const textureBack = new THREE.CanvasTexture(canvasB);
-    const textureBump = new THREE.CanvasTexture(canvasBump);
-
-    bbvaScene = new THREE.Scene();
-    bbvaCamera = new THREE.PerspectiveCamera(40, initialW / initialH, 0.1, 100);
-    bbvaCamera.position.set(0, 0, 4.8);
-
-    bbvaRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    bbvaRenderer.setSize(initialW, initialH);
-    bbvaRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    bbvaRenderer.shadowMap.enabled = true;
-    bbvaRenderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    container.innerHTML = '';
-    container.appendChild(bbvaRenderer.domElement);
-
-    if (typeof THREE.OrbitControls !== 'undefined') {
-      bbvaControls = new THREE.OrbitControls(bbvaCamera, bbvaRenderer.domElement);
-      bbvaControls.enableDamping = true;
-      bbvaControls.dampingFactor = 0.05;
-      bbvaControls.enableZoom = false;
-      bbvaControls.enablePan = false;
-    }
-
-    const width = 3.6;
-    const height = 2.28;
-    const depth = 0.06;
-    const radius = 0.18;
-
-    const shape = new THREE.Shape();
-    const x = -width / 2;
-    const y = -height / 2;
-    shape.moveTo(x + radius, y);
-    shape.lineTo(x + width - radius, y);
-    shape.quadraticCurveTo(x + width, y, x + width, y + radius);
-    shape.lineTo(x + width, y + height - radius);
-    shape.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-    shape.lineTo(x + radius, y + height);
-    shape.quadraticCurveTo(x, y + height, x, y + height - radius);
-    shape.lineTo(x, y + radius);
-    shape.quadraticCurveTo(x, y, x + radius, y);
-
-    const extrudeSettings = {
-      steps: 1,
-      depth: depth,
-      bevelEnabled: true,
-      bevelThickness: 0.015,
-      bevelSize: 0.015,
-      bevelSegments: 3
-    };
-
-    const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-    geometry.center();
-    geometry.computeVertexNormals();
-
-    const posAttr = geometry.attributes.position;
-    const normalAttr = geometry.attributes.normal;
-    const uvs = geometry.attributes.uv;
-    const indexAttr = geometry.index;
-
-    geometry.clearGroups();
-
-    const frontIndices = [];
-    const backIndices = [];
-    const edgeIndices = [];
-    const numTriangles = indexAttr ? indexAttr.count / 3 : posAttr.count / 3;
-
-    for (let i = 0; i < numTriangles; i++) {
-      let a = indexAttr ? indexAttr.getX(i * 3) : i * 3;
-      let b = indexAttr ? indexAttr.getX(i * 3 + 1) : i * 3 + 1;
-      let c = indexAttr ? indexAttr.getX(i * 3 + 2) : i * 3 + 2;
-
-      const avgNz = (normalAttr.getZ(a) + normalAttr.getZ(b) + normalAttr.getZ(c)) / 3;
-
-      if (avgNz > 0.4) {
-        frontIndices.push(a, b, c);
-      } else if (avgNz < -0.4) {
-        backIndices.push(a, b, c);
-      } else {
-        edgeIndices.push(a, b, c);
-      }
-    }
-
-    geometry.setIndex([...frontIndices, ...backIndices, ...edgeIndices]);
-    geometry.addGroup(0, frontIndices.length, 0);
-    geometry.addGroup(frontIndices.length, backIndices.length, 1);
-    geometry.addGroup(frontIndices.length + backIndices.length, edgeIndices.length, 2);
-
-    for (let i = 0; i < posAttr.count; i++) {
-      const px = posAttr.getX(i);
-      const py = posAttr.getY(i);
-      const nz = normalAttr.getZ(i);
-
-      if (nz < -0.4) {
-        const u = (width / 2 - px) / width;
-        const v = (py + height / 2) / height;
-        uvs.setXY(i, u, v);
-      } else {
-        const u = (px + width / 2) / width;
-        const v = (py + height / 2) / height;
-        uvs.setXY(i, u, v);
-      }
-    }
-    uvs.needsUpdate = true;
-
-    const edgeMaterial = new THREE.MeshStandardMaterial({ color: 0xcc0000, metalness: 0.3, roughness: 0.3 });
+    const geometry = createRoundedDonationCardGeometry(THREE);
+    const edgeMaterial = new THREE.MeshStandardMaterial({
+      color: 0xc90000,
+      metalness: .28,
+      roughness: .3
+    });
     const frontMaterial = new THREE.MeshPhysicalMaterial({
       map: textureFront,
-      bumpMap: textureBump,
-      bumpScale: 0.025,
-      roughness: 0.2,
-      metalness: 0.15,
-      clearcoat: 0.5,
-      clearcoatRoughness: 0.1
+      roughness: .24,
+      metalness: .08,
+      clearcoat: .8,
+      clearcoatRoughness: .16
     });
     const backMaterial = new THREE.MeshPhysicalMaterial({
       map: textureBack,
-      roughness: 0.25,
-      metalness: 0.1,
-      clearcoat: 0.3
+      roughness: .3,
+      metalness: .04,
+      clearcoat: .5,
+      clearcoatRoughness: .22
     });
 
-    bbvaCardMesh = new THREE.Mesh(geometry, [frontMaterial, backMaterial, edgeMaterial]);
-    bbvaCardMesh.castShadow = true;
-    bbvaScene.add(bbvaCardMesh);
+    donationCardMesh = new THREE.Mesh(geometry, [frontMaterial, backMaterial, edgeMaterial]);
+    donationCardMesh.rotation.set(-.08, .08, 0);
+    donationCardTargetY = donationCardMesh.rotation.y;
+    donationCardMesh.castShadow = true;
+    scene.add(donationCardMesh);
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x4c0b0b, 2));
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.1);
-    bbvaScene.add(ambientLight);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.2);
+    keyLight.position.set(-3, 4, 6);
+    scene.add(keyLight);
 
-    const mainLight = new THREE.DirectionalLight(0xffffff, 1.2);
-    mainLight.position.set(5, 5, 5);
-    bbvaScene.add(mainLight);
+    const redFill = new THREE.DirectionalLight(0xffb0a0, .75);
+    redFill.position.set(4, -2, 3);
+    scene.add(redFill);
 
-    const fillLight = new THREE.DirectionalLight(0x38bdf8, 0.5);
-    fillLight.position.set(-5, -3, -3);
-    bbvaScene.add(fillLight);
-
-    container.addEventListener('pointerdown', () => { isBBVARotating = false; });
-
-    const clock = new THREE.Clock();
-
-    function animate() {
-      requestAnimationFrame(animate);
-      const elapsedTime = clock.getElapsedTime();
-
-      if (bbvaCardMesh) {
-        if (isBBVARotating) {
-          bbvaCardMesh.rotation.y = Math.sin(elapsedTime * 0.8) * 0.35;
-          bbvaCardMesh.rotation.x = Math.cos(elapsedTime * 0.6) * 0.12;
-        } else if (!bbvaControls) {
-          bbvaCardMesh.rotation.y += (targetBBVARotationY - bbvaCardMesh.rotation.y) * 0.08;
-        }
-        bbvaCardMesh.position.y = Math.sin(elapsedTime * 1.5) * 0.06;
-      }
-
-      if (bbvaControls) bbvaControls.update();
-      if (bbvaRenderer && bbvaScene && bbvaCamera) {
-        bbvaRenderer.render(bbvaScene, bbvaCamera);
-      }
+    const shadowCanvas = document.createElement('canvas');
+    shadowCanvas.width = 256;
+    shadowCanvas.height = 128;
+    const shadowContext = shadowCanvas.getContext('2d');
+    if (shadowContext) {
+      const gradient = shadowContext.createRadialGradient(128, 64, 5, 128, 64, 64);
+      gradient.addColorStop(0, 'rgba(20, 15, 20, .42)');
+      gradient.addColorStop(.55, 'rgba(20, 15, 20, .18)');
+      gradient.addColorStop(1, 'rgba(20, 15, 20, 0)');
+      shadowContext.fillStyle = gradient;
+      shadowContext.fillRect(0, 0, 256, 128);
+      const shadowPlane = new THREE.Mesh(
+        new THREE.PlaneGeometry(4.5, 1.2),
+        new THREE.MeshBasicMaterial({
+          map: new THREE.CanvasTexture(shadowCanvas),
+          transparent: true,
+          depthWrite: false
+        })
+      );
+      shadowPlane.position.set(0, -1.15, -.2);
+      shadowPlane.renderOrder = -1;
+      scene.add(shadowPlane);
     }
+
+    const resize = () => {
+      const { width, height } = donationCardCanvas.getBoundingClientRect();
+      if (!width || !height) return;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      donationCardRenderer.setSize(width, height, false);
+    };
+    if (typeof ResizeObserver !== 'undefined') {
+      const resizeObserver = new ResizeObserver(resize);
+      resizeObserver.observe(donationCardCanvas);
+    } else {
+      window.addEventListener('resize', resize);
+    }
+    resize();
+
+    let animationFrame;
+    const animate = () => {
+      animationFrame = requestAnimationFrame(animate);
+      if (!cardIsDragging) {
+        donationCardMesh.rotation.y += (donationCardTargetY - donationCardMesh.rotation.y) * .12;
+      }
+      donationCardRenderer.render(scene, camera);
+      renderDonationCardRotation();
+    };
     animate();
 
-    // Responsive Resizer
-    const resizeCanvas = () => {
-      if (!container || !bbvaRenderer || !bbvaCamera) return;
-      const w = container.clientWidth || 350;
-      const h = container.clientHeight || 220;
-      bbvaCamera.aspect = w / h;
-      bbvaCamera.updateProjectionMatrix();
-      bbvaRenderer.setSize(w, h);
-    };
+    donationCardRenderer.domElement.addEventListener('webglcontextlost', event => {
+      event.preventDefault();
+      cancelAnimationFrame(animationFrame);
+      donationCard.classList.remove('has-webgl');
+      donationCardMesh = null;
+      console.error('Se perdió el contexto WebGL de la tarjeta 3D.');
+    });
+  } catch (error) {
+    donationCard.classList.remove('has-webgl');
+    donationCardMesh = null;
+    console.error('No se pudo iniciar la tarjeta 3D; se mantiene el diseño alternativo.', error);
+  }
+}
 
-    if (window.ResizeObserver) {
-      const ro = new ResizeObserver(() => resizeCanvas());
-      ro.observe(container);
-    } else {
-      window.addEventListener('resize', resizeCanvas);
+let cardIsDragging = false;
+if (donationCard) {
+  let activePointerId = null;
+  let startX = 0;
+  let startY = 0;
+  let lastX = 0;
+  let lastY = 0;
+  let dragged = false;
+
+  donationCard.addEventListener('pointerdown', event => {
+    if (!event.isPrimary || (event.pointerType === 'mouse' && event.button !== 0)) return;
+
+    activePointerId = event.pointerId;
+    startX = lastX = event.clientX;
+    startY = lastY = event.clientY;
+    dragged = false;
+    cardIsDragging = true;
+    donationCard.classList.add('is-dragging');
+    donationCard.setPointerCapture(event.pointerId);
+  });
+
+  donationCard.addEventListener('pointermove', event => {
+    if (event.pointerId !== activePointerId) return;
+
+    const deltaX = event.clientX - lastX;
+    const deltaY = event.clientY - lastY;
+    if (Math.abs(event.clientX - startX) + Math.abs(event.clientY - startY) > 6) {
+      dragged = true;
     }
 
-  } catch (err) {
-    console.warn("WebGL initialization failed, loading fallback card.", err);
-    renderFallbackCard(container);
-  }
+    if (dragged) {
+      if (donationCardMesh) {
+        donationCardMesh.rotation.y += deltaX * .012;
+        donationCardMesh.rotation.x = Math.max(-.8, Math.min(.8, donationCardMesh.rotation.x + deltaY * .01));
+        donationCardTargetY = donationCardMesh.rotation.y;
+      } else {
+        donationRotationY += deltaX * .7;
+        donationRotationX = Math.max(-35, Math.min(35, donationRotationX - deltaY * .7));
+      }
+      renderDonationCardRotation();
+    }
+
+    lastX = event.clientX;
+    lastY = event.clientY;
+  });
+
+  const finishCardDrag = event => {
+    if (event.pointerId !== activePointerId) return;
+    activePointerId = null;
+    cardIsDragging = false;
+    donationCard.classList.remove('is-dragging');
+  };
+
+  donationCard.addEventListener('pointerup', finishCardDrag);
+  donationCard.addEventListener('pointercancel', finishCardDrag);
+
+  donationCard.addEventListener('click', event => {
+    if (dragged) {
+      event.preventDefault();
+      dragged = false;
+      return;
+    }
+
+    flipDonationCard();
+  });
 }
 
-function flipBBVACard() {
-  isBBVARotating = false;
-  if (bbvaCardMesh) {
-    targetBBVARotationY = (bbvaCardMesh.rotation.y % (Math.PI * 2)) > Math.PI / 2 ? 0 : Math.PI;
-    bbvaCardMesh.rotation.y += Math.PI;
-  }
-}
-
-// Iniciamos la animación y la tarjeta 3D al completarse la carga de la página
-window.onload = function() {
+// Iniciamos la reproducción del carrusel al cargar la página
+window.onload = function () {
   startSlideShow();
-  setTimeout(initBBVA3DCard, 50);
+  initializeDonationCard3D();
 };

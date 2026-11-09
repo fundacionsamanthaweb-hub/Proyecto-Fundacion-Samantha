@@ -13,3 +13,435 @@
     .hero-slide {
       transition: opacity 1.2s ease-in-out, transform 1.2s ease-in-out;
     }
+
+    .donation-card-column {
+      width: 100%;
+      max-width: 470px;
+      margin-inline: auto;
+    }
+
+    .donation-card-stage {
+      --shadow-x: 0px;
+      --shadow-y: 10px;
+      --shadow-scale: 1;
+      --shadow-opacity: .3;
+      position: relative;
+      width: 100%;
+      perspective: 1200px;
+      touch-action: none;
+    }
+
+    .donation-card-shadow {
+      position: absolute;
+      z-index: 0;
+      top: 82%;
+      left: 13%;
+      width: 74%;
+      height: 22%;
+      border-radius: 50%;
+      background: radial-gradient(ellipse, rgb(15 23 42 / 52%) 0%, rgb(15 23 42 / 22%) 48%, transparent 76%);
+      filter: blur(13px);
+      opacity: var(--shadow-opacity);
+      pointer-events: none;
+      transform: translate3d(var(--shadow-x), var(--shadow-y), 0) scaleX(var(--shadow-scale));
+      transition: transform 160ms ease-out, opacity 160ms ease-out;
+    }
+
+    .bank-card {
+      --card-rotate-x: 0deg;
+      --card-rotate-y: 0deg;
+      display: block;
+      width: 100%;
+      padding: 0;
+      color: #fff;
+      aspect-ratio: 1.586 / 1;
+      border: 0;
+      border-radius: 4.5%;
+      background: transparent;
+      cursor: grab;
+      transform: rotateX(var(--card-rotate-x)) rotateY(var(--card-rotate-y));
+      transform-style: preserve-3d;
+      transition: transform 160ms ease-out;
+      position: relative;
+      z-index: 1;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .bank-card:focus-visible {
+      outline: 3px solid #3b71ca;
+      outline-offset: 7px;
+    }
+
+    .bank-card.is-dragging {
+      cursor: grabbing;
+      transition: none;
+    }
+
+    .bank-card.is-dragging .bank-card-inner {
+      transition: none;
+    }
+
+    .bank-card-canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: block;
+      overflow: visible;
+      border-radius: inherit;
+      pointer-events: none;
+    }
+
+    .bank-card-canvas canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      outline: none;
+    }
+
+    .bank-card.has-webgl .bank-card-inner {
+      visibility: hidden;
+    }
+
+    .bank-card-inner {
+      --card-depth: 5px;
+      --card-thickness: 10px;
+      position: relative;
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(145deg, #d40000, #990000);
+      transform-style: preserve-3d;
+      transition: transform 700ms cubic-bezier(.2, .75, .25, 1);
+      box-shadow: 0 5px 8px rgb(65 0 0 / 18%);
+    }
+
+    .bank-card-inner::before {
+      position: absolute;
+      inset: 0;
+      content: "";
+      border: 1px solid rgb(150 0 0 / 45%);
+      border-radius: inherit;
+      background: linear-gradient(145deg, #d40000, #990000);
+      transform: translateZ(0);
+    }
+
+    .bank-card.is-flipped .bank-card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .bank-card-face {
+      position: absolute;
+      inset: 0;
+      display: block;
+      overflow: hidden;
+      border: 1px solid rgb(255 255 255 / 28%);
+      border-radius: inherit;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      box-shadow:
+        inset 0 1px 1px rgb(255 255 255 / 25%),
+        inset 0 -2px 3px rgb(0 0 0 / 12%),
+        0 1px 0 #e60000,
+        0 2px 0 #c60000,
+        0 3px 0 #a90000,
+        0 5px 7px rgb(65 0 0 / 14%);
+      transform: translateZ(var(--card-depth));
+    }
+
+    .bank-card-face.bank-card-front {
+      transform: translateZ(var(--card-depth));
+    }
+
+    .bank-card-front {
+      background:
+        radial-gradient(ellipse at 92% 105%, rgb(175 0 0 / 22%), transparent 48%),
+        linear-gradient(118deg, #ed0000 0%, #e60000 52%, #d90000 100%);
+      text-align: left;
+    }
+
+    .card-front-top {
+      position: absolute;
+      top: 8%;
+      left: 8%;
+      right: 8%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .santander-brand {
+      display: flex;
+      align-items: center;
+      gap: .45em;
+      color: #dedede;
+      font-family: Arial, sans-serif;
+      font-size: clamp(1.35rem, 5.5vw, 3.4rem);
+      font-weight: 400;
+      letter-spacing: -.055em;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .santander-flame {
+      width: .72em;
+      height: .9em;
+      color: #dedede;
+      flex: none;
+    }
+
+    .card-zero {
+      align-self: flex-end;
+      margin-bottom: .12em;
+      font-size: clamp(.65rem, 2.3vw, 1.35rem);
+      font-weight: 700;
+    }
+
+    .card-chip {
+      position: absolute;
+      top: 38%;
+      left: 10%;
+      width: 16%;
+      height: 20%;
+      overflow: hidden;
+      border: 1px solid rgb(90 70 70 / 65%);
+      border-radius: 13%;
+      background: linear-gradient(145deg, #fff4f4, #d6c6c6 52%, #f8eeee);
+      box-shadow: 0 2px 3px rgb(0 0 0 / 28%);
+    }
+
+    .card-chip::before,
+    .card-chip::after,
+    .card-chip span::before,
+    .card-chip span::after {
+      position: absolute;
+      content: "";
+      border: 1px solid rgb(98 76 76 / 65%);
+    }
+
+    .card-chip::before {
+      inset: 0 34%;
+      border-top: 0;
+      border-bottom: 0;
+    }
+
+    .card-chip::after {
+      inset: 32% 0;
+      border-right: 0;
+      border-left: 0;
+    }
+
+    .card-chip span::before {
+      top: 8%;
+      bottom: 8%;
+      left: 37%;
+      width: 25%;
+      border-radius: 50%;
+      background: linear-gradient(90deg, #eee0e0, #c8b7b7, #f8eeee);
+    }
+
+    .card-chip span::after {
+      top: 8%;
+      bottom: 8%;
+      left: 46%;
+      width: 9%;
+      border-radius: 50%;
+      background: #e7dada;
+    }
+
+    .card-contactless {
+      position: absolute;
+      top: 39%;
+      left: 31%;
+      color: #ddd;
+      font-size: clamp(1.25rem, 5.8vw, 3rem);
+      transform: rotate(90deg);
+    }
+
+    .card-category {
+      position: absolute;
+      left: 10%;
+      bottom: 26%;
+      color: rgb(255 255 255 / 73%);
+      font-size: clamp(.55rem, 1.9vw, .95rem);
+    }
+
+    .card-masked-number {
+      position: absolute;
+      left: 10%;
+      bottom: 13%;
+      color: #f0dada;
+      font-family: Arial, sans-serif;
+      font-size: clamp(.72rem, 3.2vw, 1.3rem);
+      letter-spacing: .04em;
+      white-space: nowrap;
+    }
+
+    .card-front-owner {
+      position: absolute;
+      left: 10%;
+      right: 27%;
+      bottom: 5.5%;
+      overflow: hidden;
+      color: rgb(255 255 255 / 90%);
+      font-family: Arial, sans-serif;
+      font-size: clamp(.38rem, 1.65vw, .72rem);
+      font-weight: 700;
+      letter-spacing: .025em;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .card-mastercard {
+      position: absolute;
+      right: 5%;
+      bottom: 5%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .06em;
+    }
+
+    .mastercard-circles {
+      position: relative;
+      display: block;
+      width: clamp(3.2rem, 15vw, 7rem);
+      aspect-ratio: 1.9 / 1;
+    }
+
+    .mastercard-circles span {
+      position: absolute;
+      top: 0;
+      width: 58%;
+      height: 100%;
+      border-radius: 50%;
+      background: #eb001b;
+    }
+
+    .mastercard-circles span + span {
+      right: 0;
+      background: #f79e1b;
+      mix-blend-mode: screen;
+    }
+
+    .mastercard-label {
+      font-family: Arial, sans-serif;
+      font-size: clamp(.45rem, 1.65vw, .83rem);
+      font-weight: 600;
+    }
+
+    .bank-card-back {
+      background: linear-gradient(145deg, #e00000, #c90000 58%, #b40000);
+      text-align: left;
+      transform: rotateY(180deg) translateZ(var(--card-depth));
+    }
+
+    .card-back-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: flex;
+      width: 100%;
+      height: 16%;
+      padding-inline: 5%;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(100deg, #b90000, #e00000 60%, #c50000);
+      color: rgb(255 255 255 / 88%);
+      font-size: clamp(.38rem, 1.4vw, .68rem);
+      font-weight: 700;
+      letter-spacing: .07em;
+    }
+
+    .card-back-band {
+      position: absolute;
+      top: 16%;
+      left: 0;
+      width: 100%;
+      height: 27%;
+      background:
+        repeating-linear-gradient(0deg, transparent 0 3px, rgb(255 255 255 / 8%) 3px 4px),
+        linear-gradient(180deg, #e4dfe0, #bdb5b7 48%, #e8e2e3);
+      box-shadow: inset 0 2px 4px rgb(0 0 0 / 12%), 0 2px 4px rgb(0 0 0 / 12%);
+    }
+
+    .card-back-signature-label {
+      position: absolute;
+      top: 47%;
+      left: 8%;
+      color: rgb(255 255 255 / 88%);
+      font-size: clamp(.4rem, 1.5vw, .72rem);
+      font-weight: 700;
+    }
+
+    .card-back-signature {
+      position: absolute;
+      top: 56%;
+      left: 8%;
+      width: 84%;
+      height: 19%;
+      display: flex;
+      padding-inline: 3%;
+      align-items: center;
+      overflow: hidden;
+      border: 1px solid rgb(255 255 255 / 65%);
+      border-radius: 3px;
+      background:
+        repeating-linear-gradient(135deg, transparent 0 9px, rgb(110 70 70 / 13%) 9px 10px),
+        linear-gradient(100deg, #fffafa, #e6dada 72%, #fff);
+      box-shadow: inset 0 1px 2px rgb(0 0 0 / 14%), 0 1px 2px rgb(0 0 0 / 15%);
+      color: #4a2525;
+    }
+
+    .card-back-bank {
+      position: absolute;
+      right: 8%;
+      bottom: 3%;
+      display: flex;
+      align-items: center;
+      gap: .4em;
+      color: rgb(255 255 255 / 85%);
+      font-size: clamp(.42rem, 1.45vw, .7rem);
+      font-weight: 700;
+      text-shadow: 0 1px 2px rgb(0 0 0 / 20%);
+    }
+
+    .card-back-owner-label {
+      position: absolute;
+      top: 76%;
+      left: 8%;
+      color: rgb(255 255 255 / 72%);
+      font-size: clamp(.38rem, 1.4vw, .68rem);
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .card-back-clabe {
+      font-family: monospace;
+      font-size: clamp(.68rem, 2.8vw, 1.3rem);
+      font-weight: 700;
+      letter-spacing: .025em;
+      white-space: nowrap;
+    }
+
+    .card-back-owner {
+      position: absolute;
+      top: 83%;
+      left: 8%;
+      right: 8%;
+      overflow: hidden;
+      font-size: clamp(.38rem, 1.5vw, .72rem);
+      font-weight: 700;
+      line-height: 1.2;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .bank-card,
+      .bank-card-inner {
+        transition-duration: 1ms;
+      }
+    }
